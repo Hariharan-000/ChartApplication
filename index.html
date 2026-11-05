@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <title>SecureChat Pro - Advanced Realtime Messenger</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- ==================== AUTHENTICATION OVERLAY ==================== -->
+  <div class="auth-wrapper" id="authWrapper">
+    <div class="auth-card" id="authCard">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+        </div>
+        <h1 class="auth-title" id="authTitle">SecureChat Pro</h1>
+        <p class="auth-subtitle" id="authSubtitle">Sign in to start secure real-time messaging</p>
+        <div class="auth-highlights" aria-label="Chat features">
+          <span><i class="highlight-dot" aria-hidden="true"></i>Private workspace</span>
+          <span class="highlight-divider" aria-hidden="true"></span>
+          <span>Real-time chat</span>
+        </div>
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form id="authForm" onsubmit="return false;">
+        <div class="input-group" id="groupDisplayName" style="display: none;">
+          <label for="regDisplayName">Display Name</label>
+          <input type="text" id="regDisplayName" class="auth-input" placeholder="e.g. John Doe" maxlength="32">
+        </div>
+
+        <div class="input-group">
+          <label for="authUsername">Username</label>
+          <input type="text" id="authUsername" class="auth-input" placeholder="Enter username" autocomplete="username" maxlength="20" required>
+        </div>
+
+        <div class="input-group">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" class="auth-input" placeholder="At least 6 characters" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btnAuthSubmit">
+          <span id="btnAuthText">Sign in</span>
+        </button>
+      </form>
+
+      <div class="auth-toggle">
+        <span id="authTogglePrompt">Don't have an account?</span>
+        <button type="button" class="auth-link" id="btnToggleAuthMode">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APPLICATION CONTAINER ==================== -->
+  <div class="app-container" id="appContainer">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Profile Header -->
+      <div class="sidebar-header">
+        <div class="user-badge" id="btnOpenProfile" title="Profile & Settings">
+          <div class="avatar" id="myAvatar">U
+            <span class="status-dot online"></span>
+          </div>
+          <div class="user-info">
+            <div class="display-name" id="myDisplayName">Loading...</div>
+            <div class="status-text" id="myStatusBio">Online</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" id="btnNewChannel" title="Create Channel">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </button>
+          <button class="icon-btn" id="btnSettings" title="Settings">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          </button>
+          <button class="icon-btn" id="btnLogout" title="Log out">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="sidebar-search-box">
+        <div class="search-input-wrapper">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="sidebarSearch" class="search-input" placeholder="Search chats, people, channels...">
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" id="tabDirect" data-tab="direct">Direct Chats</button>
+        <button class="tab-btn" id="tabChannels" data-tab="channels">Channels</button>
+      </div>
+
+      <!-- Chats List -->
+      <div class="sidebar-list" id="conversationsList">
+        <!-- Rendered dynamically -->
+      </div>
+    </aside>
+
+    <!-- CHAT WORKSPACE -->
+    <main class="chat-workspace" id="chatWorkspace">
+      <!-- Chat Header -->
+      <header class="chat-header" id="chatHeader">
+        <div class="chat-target-info">
+          <button class="btn-back" id="btnBackToSidebar" aria-label="Back">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <div class="avatar" id="targetAvatar">#</div>
+          <div class="chat-target-meta">
+            <div class="chat-target-name" id="targetName">Select a conversation</div>
+            <div class="chat-target-status" id="targetStatus">Pick a friend or channel to chat</div>
+          </div>
+        </div>
+
+        <div class="chat-actions" id="chatHeaderActions" style="display: none;">
+          <div class="search-input-wrapper" style="width: 170px;">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="chatSearchInput" class="search-input" placeholder="Search in chat..." list="searchSuggestions" autocomplete="off">
+            <datalist id="searchSuggestions"></datalist>
+          </div>
+
+          <button class="icon-btn" id="btnStartAudioCall" title="Start Audio Call">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.35-5.43-3.9-6.63-6.82l1.92-1.61c.29-.26.39-.65.29-1.02A12.02 12.02 0 0 1 9 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-4.62c0-.55-.45-1-1-1z"/></svg>
+          </button>
+
+          <button class="icon-btn" id="btnStartVideoCall" title="Start Video Call">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+          </button>
+
+          <button class="icon-btn" id="btnClearChat" title="Clear chat history (only for you)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Search Highlight Chips -->
+      <div class="search-chip-bar" id="searchChipsBar" style="display: none;">
+        <span id="chipsContainer"></span>
+        <span class="text-muted" id="searchMatchCount">0 matches</span>
+      </div>
+
+      <!-- Pinned Message Banner -->
+      <div class="pinned-banner" id="pinnedBanner" style="display: none;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 9V4l1 0c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1l1 0v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z"/></svg>
+        <span class="pin-text" id="pinnedBannerText">Pinned message</span>
+        <button class="icon-btn" id="btnUnpinBanner" style="width: 24px; height: 24px;">✕</button>
+      </div>
+
+      <!-- Messages Stream -->
+      <div class="messages-container" id="messagesContainer">
+        <div class="empty-chat-state">
+          <div class="empty-chat-icon">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+          </div>
+          <div class="empty-chat-title">Welcome to SecureChat</div>
+          <div class="empty-chat-sub">Select any contact or channel on the left to start sending instant messages, voice notes, and media.</div>
+          <div class="empty-chat-highlights" aria-label="Available chat features">
+            <span>Instant messages</span>
+            <span>Voice notes</span>
+            <span>Channels</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Jump-to-bottom FAB -->
+      <button class="jump-bottom-fab" id="btnJumpBottom" style="display: none;" title="Scroll to bottom">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      </button>
+
+      <!-- In-Chat Typing Status -->
+      <div class="typing-indicator-box" id="typingIndicator" style="display: none;">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span id="typingUserText">Someone is typing...</span>
+      </div>
+
+      <!-- Reply Preview Bar -->
+      <div class="reply-banner" id="replyBanner" style="display: none;">
+        <div class="reply-banner-content" id="replyBannerText">Replying to...</div>
+        <button class="reply-cancel-btn" id="btnCancelReply">✕</button>
+      </div>
+
+      <!-- Compose Input Bar -->
+      <div class="chat-input-area" id="chatInputArea" style="display: none;">
+        <div class="input-actions-left">
+          <input type="file" id="fileInput" accept="image/*" style="display: none;">
+          <button class="icon-btn" id="btnAttachFile" title="Attach Image">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>
+          </button>
+          <button class="icon-btn" id="btnToggleEmoji" title="Emoji">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+          </button>
+        </div>
+
+        <!-- Live Audio Recording Bar (shown when recording mic) -->
+        <div class="recording-bar" id="recordingBar" style="display: none;">
+          <div class="rec-pulse-dot"></div>
+          <div class="rec-timer" id="recTimer">0:00</div>
+          <div class="rec-waveform-live">
+            <span class="rec-bar"></span><span class="rec-bar"></span><span class="rec-bar"></span><span class="rec-bar"></span><span class="rec-bar"></span><span class="rec-bar"></span><span class="rec-bar"></span><span class="rec-bar"></span>
+          </div>
+          <button class="icon-btn" id="btnCancelRecord" title="Cancel Recording" style="color: var(--danger);">✕</button>
+          <button class="icon-btn" id="btnSendRecord" title="Send Voice Memo" style="color: var(--online);">✓</button>
+        </div>
+
+        <!-- Normal Text Input -->
+        <textarea id="messageInput" class="chat-text-input" placeholder="Type a message..." rows="1"></textarea>
+
+        <!-- Mic Voice Note Button -->
+        <button class="icon-btn" id="btnMicRecord" title="Hold/Click to record voice note">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        </button>
+
+        <!-- Send Button -->
+        <button class="chat-send-btn" id="btnSendMessage" title="Send Message">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+
+        <!-- Emoji Picker Popover -->
+        <div class="emoji-popover" id="emojiPopover" style="display: none;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Profile & Settings Modal -->
+  <div class="modal-overlay" id="profileModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Settings & Profile</h2>
+        <button class="modal-close-btn" id="btnCloseProfile">✕</button>
+      </div>
+
+      <div class="input-group">
+        <label for="profileDisplayName">Display Name</label>
+        <input type="text" id="profileDisplayName" class="auth-input" maxlength="32">
+      </div>
+
+      <div class="input-group">
+        <label for="profileBio">Bio / Status Message</label>
+        <input type="text" id="profileBio" class="auth-input" maxlength="120" placeholder="What's on your mind?">
+      </div>
+
+      <div class="input-group">
+        <label for="themeSelect">Theme Preset</label>
+        <select id="themeSelect" class="auth-input" style="cursor: pointer;">
+          <option value="dark">Dark Slate Glass (Default)</option>
+          <option value="neon">Cyber Neon Violet</option>
+          <option value="light">Crisp Clean Light</option>
+        </select>
+      </div>
+
+      <div class="input-group" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+        <label for="chkHideLastSeen" style="margin: 0; cursor: pointer;">Hide My Last Seen Status</label>
+        <input type="checkbox" id="chkHideLastSeen" style="width: 20px; height: 20px; cursor: pointer;">
+      </div>
+
+      <div class="input-group" style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
+        <label for="chkSoundEffects" style="margin: 0; cursor: pointer;">Play Sound Effects</label>
+        <input type="checkbox" id="chkSoundEffects" checked style="width: 20px; height: 20px; cursor: pointer;">
+      </div>
+
+      <button type="button" class="btn-primary" id="btnSaveProfile" style="margin-top: 20px;">
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Create Channel Modal -->
+  <div class="modal-overlay" id="channelModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Channel</h2>
+        <button class="modal-close-btn" id="btnCloseChannel">✕</button>
+      </div>
+
+      <div class="input-group">
+        <label for="channelName">Channel Name</label>
+        <input type="text" id="channelName" class="auth-input" placeholder="e.g. project-launch" maxlength="30" required>
+      </div>
+
+      <div class="input-group">
+        <label for="channelDesc">Description (Optional)</label>
+        <input type="text" id="channelDesc" class="auth-input" placeholder="What is this channel about?" maxlength="100">
+      </div>
+
+      <button type="button" class="btn-primary" id="btnSubmitChannel" style="margin-top: 10px;">
+        Create Channel
+      </button>
+    </div>
+  </div>
+
+  <!-- Audio / Video Call Modal -->
+  <div class="modal-overlay" id="callModal" style="display: none;">
+    <div class="modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="callTitle">Call</h2>
+        <span id="callStatusBadge" style="font-size: 12px; color: var(--accent); font-weight: 600;">Connecting...</span>
+      </div>
+
+      <div class="call-modal-body">
+        <audio id="remoteAudio" autoplay playsinline></audio>
+        <div id="callAudioPulseView">
+          <div class="call-avatar-pulse" id="callAvatar">?</div>
+          <h3 id="callPeerName" style="margin-bottom: 6px;">Contact</h3>
+          <p class="text-muted" id="callStateLabel">Ringing...</p>
+        </div>
+
+        <div class="call-video-container" id="callVideoView" style="display: none;">
+          <video id="remoteVideo" class="remote-video" autoplay playsinline muted></video>
+          <video id="localVideo" class="local-video" autoplay playsinline muted></video>
+        </div>
+
+        <button type="button" class="btn-primary call-audio-enable" id="btnEnableCallAudio" style="display: none;">
+          Tap to enable call audio
+        </button>
+
+        <div class="call-controls" id="callControls">
+          <!-- Incoming call controls -->
+          <div id="incomingControls" style="display: none; gap: 16px;">
+            <button class="call-btn accept" id="btnAcceptCall" title="Accept Call">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-1.57 1.97c-2.83-1.35-5.43-3.9-6.63-6.82l1.92-1.61c.29-.26.39-.65.29-1.02A12.02 12.02 0 0 1 9 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-4.62c0-.55-.45-1-1-1z"/></svg>
+            </button>
+            <button class="call-btn decline" id="btnRejectCall" title="Decline Call">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.996.996 0 0 1 0-1.41C2.55 9.42 6.98 8 12 8s9.45 1.42 11.71 3.67c.39.39.39 1.02 0 1.41l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.73-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+            </button>
+          </div>
+
+          <!-- Active call controls -->
+          <div id="activeControls" style="display: flex; gap: 14px;">
+            <button class="call-btn action" id="btnToggleMic" title="Mute/Unmute Mic">
+              <svg id="iconMicOn" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+            <button class="call-btn action" id="btnToggleCam" title="Toggle Camera">
+              <svg id="iconCamOn" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            </button>
+            <button class="call-btn decline" id="btnEndCall" title="End Call">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.996.996 0 0 1 0-1.41C2.55 9.42 6.98 8 12 8s9.45 1.42 11.71 3.67c.39.39.39 1.02 0 1.41l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.73-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal -->
+  <div class="modal-overlay" id="lightboxModal" style="display: none; background: rgba(0,0,0,0.85);" onclick="this.style.display='none'">
+    <img id="lightboxImg" src="" style="max-width: 90vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+  </div>
+
+  <!-- Audio Synthesizer & Client App Script -->
+  <script src="/app.js"></script>
+</body>
+</html>
