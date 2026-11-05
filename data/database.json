@@ -1,0 +1,287 @@
+{
+  "users": {
+    "hariharan": {
+      "id": "hariharan",
+      "username": "hariharan",
+      "displayName": "hari",
+      "salt": "b41d66d1c772a335971ef78365fd9b97",
+      "hash": "c993fe2308f00f45231240abd35af229f54e41104669ac2f4871727b5e18ac3025bd3f5c76e17008806c672e383d5cf157b11095f71e2db91c33027cd9481684",
+      "avatarColor": "#ec4899",
+      "bio": "Hey there! I am using SecureChat.",
+      "theme": "dark",
+      "hideLastSeen": false,
+      "createdAt": 1793719883645
+    },
+    "kumar": {
+      "id": "kumar",
+      "username": "kumar",
+      "displayName": "kumar",
+      "salt": "68a80bfdc0e726e192e7fba784ee6d72",
+      "hash": "2af7aba4f5ed34968a85d78323e18d72525c70ff46102e3564a6fe9eae32997f3fad05a1eb302c1016bfeb4f70b262b8615ffb7780255092cb9b6dc7baa9e361",
+      "avatarColor": "#06b6d4",
+      "bio": "Hey there! I am using SecureChat.",
+      "theme": "dark",
+      "hideLastSeen": false,
+      "createdAt": 1793720448206
+    },
+    "bhsdvlva": {
+      "id": "bhsdvlva",
+      "username": "bhsdvlva",
+      "displayName": "rithish",
+      "salt": "4a61ec5f1d9f3eefe62377407efc1007",
+      "hash": "ad7f9465f7ee2fe78dc9f075c39285f159ca35d3dfdd672ee299089c2e231d3758a21513d94eab23caec88b2080293daaf9ad174386d9e22c8800808e11e4fa7",
+      "avatarColor": "#10b981",
+      "bio": "Hey there! I am using SecureChat.",
+      "theme": "dark",
+      "hideLastSeen": false,
+      "createdAt": 1793720587126
+    },
+    "kjbdkjvk": {
+      "id": "kjbdkjvk",
+      "username": "kjbdkjvk",
+      "displayName": "faziail",
+      "salt": "384c9780953483094e184ff969b17193",
+      "hash": "01c017d7b8d7d936363c3b0ec417f97cf2652724ffd706648018657858d7f2cd7aedbab1abe24881b3db1ebf5a5520de0e77f18a15f413c28d83606bddc3c2b1",
+      "avatarColor": "#3b82f6",
+      "bio": "Hey there! I am using SecureChat.",
+      "theme": "dark",
+      "hideLastSeen": false,
+      "createdAt": 1793720771427
+    },
+    "babu": {
+      "id": "babu",
+      "username": "babu",
+      "displayName": "hari",
+      "salt": "30706eba95f9c5e2ec82fdd9e3a3e578",
+      "hash": "3ef14e699cbde797f8e9608eefef9aeb7a850c58cb118814339f216437af5f40aa12c31ab4cc241eda5db1e7c516c59cf07489019d5d347056133052a1778756",
+      "avatarColor": "#8b5cf6",
+      "bio": "Hey there! I am using SecureChat.",
+      "theme": "dark",
+      "hideLastSeen": false,
+      "createdAt": 1793723015889
+    },
+    "kjsbddjfs": {
+      "id": "kjsbddjfs",
+      "username": "kjsbddjfs",
+      "displayName": "king",
+      "salt": "61917aebde65610486caa9da89d4d4d7",
+      "hash": "b2047887043804b3f6a6809c6e766060691e886658dca305df9eda2900904a7870d22d2b3506f137c097b0b79885ae819afaf9927222152cac3ee997d7e59cb5",
+      "avatarColor": "#8b5cf6",
+      "bio": "Hey there! I am using SecureChat.",
+      "theme": "dark",
+      "hideLastSeen": false,
+      "createdAt": 1793726177763
+    }
+  },
+  "conns": [
+    {
+      "id": "1a049ee5-60ad-48ec-8406-35ae82ee7e0a",
+      "from": "kumar",
+      "to": "hariharan",
+      "status": "pending",
+      "ts": 1793720514936
+    },
+    {
+      "id": "f4a5d2e7-20be-4484-9c67-97c054b9d903",
+      "from": "bhsdvlva",
+      "to": "hariharan",
+      "status": "pending",
+      "ts": 1793720609122
+    },
+    {
+      "id": "a0261fc9-40f8-46aa-8905-0914cf203b81",
+      "from": "bhsdvlva",
+      "to": "kumar",
+      "status": "pending",
+      "ts": 1793720614271
+    },
+    {
+      "id": "db6d32c1-b6db-4491-b2a8-7f3590787025",
+      "from": "kjbdkjvk",
+      "to": "hariharan",
+      "status": "pending",
+      "ts": 1793720782778
+    },
+    {
+      "id": "f2bc0368-6554-46df-b586-e98473ad145a",
+      "from": "kjbdkjvk",
+      "to": "bhsdvlva",
+      "status": "accepted",
+      "ts": 1793720814339
+    },
+    {
+      "id": "43f655af-1d27-470f-be36-5ebfce5cda62",
+      "from": "kjbdkjvk",
+      "to": "babu",
+      "status": "accepted",
+      "ts": 1793723060027
+    },
+    {
+      "id": "e018bbaa-2910-4307-b649-3b6a8fa89452",
+      "from": "kjbdkjvk",
+      "to": "kumar",
+      "status": "pending",
+      "ts": 1793726089515
+    },
+    {
+      "id": "0c09dc3d-6140-4117-a507-0f601a35e6a2",
+      "from": "kjsbddjfs",
+      "to": "kjbdkjvk",
+      "status": "accepted",
+      "ts": 1793726188041
+    }
+  ],
+  "channels": [
+    {
+      "id": "general",
+      "name": "General Lounge",
+      "description": "Public open discussion for all users",
+      "isChannel": true,
+      "createdAt": 1793382147273
+    },
+    {
+      "id": "tech",
+      "name": "Tech & Code",
+      "description": "Developer talk, tips, and technology",
+      "isChannel": true,
+      "createdAt": 1793382147273
+    },
+    {
+      "id": "random",
+      "name": "Random & Fun",
+      "description": "Memes, music, and casual chit-chat",
+      "isChannel": true,
+      "createdAt": 1793382147273
+    },
+    {
+      "id": "ch_mw0uk3gj_ddsg",
+      "name": "fun pandroom",
+      "description": "fun",
+      "isChannel": true,
+      "creator": "hariharan",
+      "createdAt": 1793719970947
+    }
+  ],
+  "messages": [
+    {
+      "id": "42290d86-3b6a-487e-b7d5-d32399cb5619",
+      "conversationId": "tech",
+      "from": "hariharan",
+      "to": null,
+      "channelId": "tech",
+      "body": "hi",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793719942495
+    },
+    {
+      "id": "5a29a205-78c0-4cac-aeea-ed181fea50c1",
+      "conversationId": "random",
+      "from": "hariharan",
+      "to": null,
+      "channelId": "random",
+      "body": "hi",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793719952291
+    },
+    {
+      "id": "d2fe2830-db87-4cd2-8854-8d6345a071fd",
+      "conversationId": "ch_mw0uk3gj_ddsg",
+      "from": "kjbdkjvk",
+      "to": null,
+      "channelId": "ch_mw0uk3gj_ddsg",
+      "body": "hi",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793720882630
+    },
+    {
+      "id": "2591a6f8-c902-408b-894e-4bbff69e605d",
+      "conversationId": "ch_mw0uk3gj_ddsg",
+      "from": "bhsdvlva",
+      "to": null,
+      "channelId": "ch_mw0uk3gj_ddsg",
+      "body": "hi",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793720900852
+    },
+    {
+      "id": "5e697dea-8960-422c-af06-1fb8788f26d1",
+      "conversationId": "ch_mw0uk3gj_ddsg",
+      "from": "bhsdvlva",
+      "to": null,
+      "channelId": "ch_mw0uk3gj_ddsg",
+      "body": "hi",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793720910686
+    },
+    {
+      "id": "4facbf6f-ef27-48c6-85ca-db21890ec194",
+      "conversationId": "ch_mw0uk3gj_ddsg",
+      "from": "kjbdkjvk",
+      "to": null,
+      "channelId": "ch_mw0uk3gj_ddsg",
+      "body": "sunni",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793720927703
+    },
+    {
+      "id": "249d5aeb-65df-4f4d-b2fd-b0c0b716b5cc",
+      "conversationId": "ch_mw0uk3gj_ddsg",
+      "from": "bhsdvlva",
+      "to": null,
+      "channelId": "ch_mw0uk3gj_ddsg",
+      "body": "kalam win daa",
+      "type": "text",
+      "mediaUrl": null,
+      "replyTo": null,
+      "reactions": {},
+      "edited": false,
+      "deleted": false,
+      "status": "sent",
+      "pinned": false,
+      "ts": 1793720942457
+    }
+  ],
+  "cleared": {}
+}

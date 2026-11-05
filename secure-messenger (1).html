@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SecureChat</title>
+<style>
+:root{--bg:#f6f5f1;--sf:#fff;--tx:#1f1f1c;--mu:#6b6a63;--bd:#e2e0d8;--ac:#534ab7;--acx:#fff;--me:#e8e6fb;--ok:#1d9e75;--bad:#a32d2d;
+--h0:#ffe08a;--h1:#a8e6cf;--h2:#ffb3c1;--h3:#a5d8ff;--h4:#d0bfff;--h5:#ffc9a3;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1b1b19;--sf:#262624;--tx:#ecebe5;--mu:#a3a199;--bd:#3a3a36;--ac:#9a93ee;--acx:#1b1b19;--me:#3a3560;--h0:#7a5d00;--h1:#1d6b52;--h2:#8a2f45;--h3:#1f5a8a;--h4:#54408f;--h5:#8a4a1d}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#1b1b19;--sf:#262624;--tx:#ecebe5;--mu:#a3a199;--bd:#3a3a36;--ac:#9a93ee;--acx:#1b1b19;--me:#3a3560;--h0:#7a5d00;--h1:#1d6b52;--h2:#8a2f45;--h3:#1f5a8a;--h4:#54408f;--h5:#8a4a1d}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+button,input{font:inherit;color:inherit}
+input{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;width:100%}
+input:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+button{cursor:pointer;border:1px solid var(--bd);background:var(--sf);border-radius:8px;padding:8px 12px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.pri{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+.hide{display:none!important}
+#auth{max-width:360px;margin:8vh auto;padding:24px;background:var(--sf);border:1px solid var(--bd);border-radius:12px}
+#auth h1{font-size:20px;margin:0 0 4px}#auth p{color:var(--mu);margin:0 0 16px;font-size:13px}
+#auth input{margin-bottom:10px}#err{color:var(--bad);font-size:13px;min-height:20px}
+.link{background:none;border:0;color:var(--ac);padding:0;text-decoration:underline}
+.app{display:grid;grid-template-columns:300px 1fr;height:100%}
+.side{border-right:1px solid var(--bd);background:var(--sf);display:flex;flex-direction:column;min-height:0}
+.sh{padding:12px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:8px;align-items:center}
+.sm{font-size:12px;color:var(--mu)}
+#list{overflow:auto;flex:1}
+.u{display:flex;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--bd)}
+.u:hover,.u.sel{background:var(--me)}
+.av{width:38px;height:38px;border-radius:50%;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-weight:500;position:relative;flex:none;text-transform:uppercase}
+.dot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;border:2px solid var(--sf);background:var(--mu)}
+.dot.on{background:var(--ok)}
+.u .t{flex:1;min-width:0}.u .n{font-weight:500}.u .p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mu);font-size:13px}
+.badge{background:var(--ac);color:var(--acx);border-radius:10px;font-size:12px;padding:0 7px}
+.main{display:flex;flex-direction:column;min-height:0;min-width:0}
+.mh{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--bd);background:var(--sf)}
+.mh #head{min-width:0}
+.back{display:none}
+#net{background:var(--bad);color:#fff;text-align:center;padding:6px;font-size:13px}
+#msgs{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:6px}
+.empty{margin:auto;color:var(--mu);text-align:center}
+.b{align-self:flex-start;max-width:75%;padding:7px 11px;border-radius:12px;background:var(--sf);border:1px solid var(--bd);word-wrap:break-word;overflow-wrap:anywhere}
+.b.me{align-self:flex-end;background:var(--me)}
+.b.del{font-style:italic;color:var(--mu)}
+.b.flash{outline:2px solid var(--ac)}
+.meta{font-size:11px;color:var(--mu);display:flex;gap:6px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.rd{color:var(--ac)}
+.act{background:none;border:0;padding:0;font-size:11px;color:var(--mu);text-decoration:underline}
+.cmp{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--bd);background:var(--sf)}
+mark{color:inherit;border-radius:3px;padding:0 2px}
+.h0{background:var(--h0)}.h1{background:var(--h1)}.h2{background:var(--h2)}.h3{background:var(--h3)}.h4{background:var(--h4)}.h5{background:var(--h5)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:6px 14px;border-bottom:1px solid var(--bd);background:var(--sf);font-size:12px}
+.chip{padding:1px 9px;border-radius:10px;color:var(--tx)}
+.q{border-left:3px solid var(--ac);background:rgba(127,127,127,.14);border-radius:6px;padding:3px 8px;margin-bottom:4px;font-size:13px;cursor:pointer;display:flex;flex-direction:column;min-width:0}
+.q b{font-size:12px;color:var(--ac)}
+.q span{color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rbar{display:flex;gap:8px;align-items:center;padding:6px 14px;border-top:1px solid var(--bd);background:var(--sf);font-size:13px}
+#rtxt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-left:3px solid var(--ac);padding-left:8px}
+.panel{margin:auto;text-align:center;max-width:320px;padding:20px;border:1px solid var(--bd);background:var(--sf);border-radius:12px}
+#mq{width:170px;flex:none}
+@media(max-width:700px){.app{grid-template-columns:1fr}.main{display:none}.app.open .side{display:none}.app.open .main{display:flex}.back{display:inline-block}.b{max-width:88%}#mq{width:110px}}
+</style></head>
+<body>
+<div id="auth">
+<h1>SecureChat</h1><p id="sub">Sign in to start messaging.</p>
+<input id="un" placeholder="Username" autocomplete="username" maxlength="16">
+<input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password">
+<div id="err" role="alert"></div>
+<button class="pri" id="go" style="width:100%">Sign in</button>
+<p style="margin:12px 0 0"><button class="link" id="sw">Create an account</button></p>
+<p class="sm" style="margin-top:12px">Tip: open this page in a second tab or window and register another user. Send a connection request, accept it in the other tab, then chat in real time.</p>
+</div>
+
+<div class="app hide" id="app">
+<aside class="side">
+<div class="sh">
+<div class="row"><div class="av" id="meAv"></div><div style="flex:1"><div id="meName" style="font-weight:500"></div><div class="sm" id="meSt"></div></div><button id="out">Log out</button></div>
+<input id="sq" placeholder="Search users" aria-label="Search users">
+<label class="sm row"><input type="checkbox" id="hide" style="width:auto"> Hide my last seen</label>
+<label class="sm row"><input type="checkbox" id="off" style="width:auto"> Simulate network drop</label>
+</div>
+<div id="list"></div>
+</aside>
+<section class="main">
+<div id="net" class="hide" role="status">Reconnecting… messages will send when you are back online.</div>
+<div class="mh"><button class="back" id="bk" aria-label="Back">←</button><div id="head" style="flex:1"><span class="sm">No conversation selected</span></div>
+<input id="mq" list="sugg" placeholder="Search in chat" aria-label="Search in chat" autocomplete="off" disabled><datalist id="sugg"></datalist>
+<button id="clr" title="Clear this chat (only for you)" disabled>Clear chat</button></div>
+<div id="chips" class="chips hide" aria-live="polite"></div>
+<div id="msgs" aria-live="polite"><div class="empty">Select a user to start a conversation.</div></div>
+<div id="rbar" class="rbar hide"><div id="rtxt"></div><button id="rx" aria-label="Cancel reply">✕</button></div>
+<div class="cmp"><input id="mi" placeholder="Type a message" maxlength="1000" disabled aria-label="Message"><button class="pri" id="sd" disabled>Send</button></div>
+</section>
+</div>
+
+<script>
+const DB="sc_db",PR="sc_pr",ch=new BroadcastChannel("sc");
+let me=null,peer=null,net=true,outbox=[],shown=20,q="",mode="login",stamps=[],replyTo=null,hits=0,st;
+try{me=sessionStorage.getItem("sc_me")}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=t=>new Date(t).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+
+/* ---------- storage ---------- */
+function conn(d,a,b){return(d.conns||[]).find(c=>(c.from===a&&c.to===b)||(c.from===b&&c.to===a))}
+function load(){try{
+const d=JSON.parse(localStorage.getItem(DB))||{users:{},msgs:[]};
+d.users=d.users||{};d.msgs=d.msgs||[];d.cleared=d.cleared||{};
+if(!d.conns){d.conns=[];d.msgs.forEach(m=>{if(!conn(d,m.from,m.to))d.conns.push({id:m.id,from:m.from,to:m.to,status:"accepted",ts:m.ts})})}
+return d}catch(e){return{users:{},msgs:[],conns:[],cleared:{}}}}
+function save(d){try{localStorage.setItem(DB,JSON.stringify(d))}catch(e){}ch.postMessage("s")}
+function pres(){try{return JSON.parse(localStorage.getItem(PR))||{}}catch(e){return{}}}
+function setPres(p){try{localStorage.setItem(PR,JSON.stringify(p))}catch(e){}}
+function beat(){if(!me||!net)return;const p=pres();p[me]=Date.now();setPres(p)}
+function presence(id,d){const u=d.users[id],t=pres()[id];if(u&&u.hide)return{on:false,t:"offline"};if(t&&Date.now()-t<12000)return{on:true,t:"online"};return{on:false,t:t?"last seen "+fmt(t):"offline"}}
+async function hash(p,s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+
+/* ---------- learning store (per user, remembers what you search and open) ---------- */
+const emptyL=()=>({q:{},o:{},s:{}});
+function getL(){try{return Object.assign(emptyL(),JSON.parse(localStorage.getItem("sc_ln_"+me)))}catch(e){return emptyL()}}
+function setL(L){try{localStorage.setItem("sc_ln_"+me,JSON.stringify(L))}catch(e){}}
+
+/* ---------- smarter search ---------- */
+const norm=s=>String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const words=s=>norm(s).match(/[\p{L}\p{N}_]+/gu)||[];
+function lev(a,b){
+if(a===b)return 0;if(Math.abs(a.length-b.length)>2)return 9;
+let p=Array.from({length:b.length+1},(_,i)=>i);
+for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}
+return p[b.length]}
+/* how well does query token t match word w: exact > prefix > contains > typo */
+function tmatch(t,w){
+if(w===t)return 4;if(w.startsWith(t))return 3;
+if(t.length>=3&&w.includes(t))return 2;
+if(t.length>=4&&lev(t,w)<=1)return 1.5;
+if(t.length>=6&&lev(t,w)<=2)return 1;
+return 0}
+/* every token must match somewhere (AND); phrase and in-order matches score extra */
+function scoreText(text,toks,full){
+const ws=words(text);let s=0;
+for(const t of toks){let b=0;for(const w of ws){const x=tmatch(t,w);if(x>b)b=x}if(!b)return 0;s+=b}
+const nt=norm(text);
+if(full&&nt.includes(full))s+=2;
+if(toks.length>1){let pos=-1,ok=true;for(const t of toks){const i=nt.indexOf(t,pos+1);if(i<0){ok=false;break}pos=i}if(ok)s+=1}
+return s}
+/* each typed word gets its own colour, in the order typed */
+function hl(body,toks){
+if(!toks.length)return esc(body);
+return body.split(/([\p{L}\p{N}_]+)/u).map((p,i)=>{
+if(i%2===0)return esc(p);
+const w=norm(p);let k=-1,best=0;
+toks.forEach((t,j)=>{const s=tmatch(t,w);if(s>best){best=s;k=j}});
+return k<0?esc(p):`<mark class="h${k%6}">${esc(p)}</mark>`}).join("")}
+function vocab(d,withLearned){
+const m=new Map();
+if(peer)convo(d,me,peer).forEach(x=>{if(!x.deleted)words(x.body).forEach(w=>{if(w.length>=3)m.set(w,(m.get(w)||0)+1)})});
+if(withLearned){const L=getL();Object.keys(L.q).forEach(k=>words(k).forEach(w=>{if(w.length>=3)m.set(w,(m.get(w)||0)+L.q[k])}))}
+return m}
+function fix(d,toks){
+const v=vocab(d,false);let changed=false;
+const out=toks.map(t=>{
+for(const w of v.keys())if(tmatch(t,w))return t;
+if(t.length<3)return t;
+let best=null,bd=3;
+for(const[w,c]of v){const dd=lev(t,w);if(dd<bd||(dd===bd&&best&&c>v.get(best))){bd=dd;best=w}}
+if(best&&bd<=2){changed=true;return best}return t});
+return changed?out.join(" "):""}
+function suggest(){
+const d=load(),L=getL(),nr=norm(q).replace(/^\s+/,""),i=q.lastIndexOf(" "),base=q.slice(0,i+1),last=norm(q.slice(i+1));
+const out=Object.keys(L.q).filter(k=>k.startsWith(nr)&&k!==nr).sort((a,b)=>L.q[b]-L.q[a]);
+if(last)[...vocab(d,true)].filter(([w])=>w.startsWith(last)&&w!==last).sort((a,b)=>b[1]-a[1]).forEach(([w])=>out.push(base+w));
+$("sugg").innerHTML=[...new Set(out)].slice(0,8).map(s=>`<option value="${esc(s)}">`).join("")}
+function recordSearch(){
+const nq=norm(q).trim().replace(/\s+/g," ");if(nq.length<2||!hits||!me)return;
+const L=getL();L.q[nq]=(L.q[nq]||0)+1;
+const k=Object.keys(L.q);if(k.length>60)k.sort((a,b)=>L.q[a]-L.q[b]).slice(0,k.length-60).forEach(x=>delete L.q[x]);
+setL(L)}
+function useQ(s){q=s;$("mq").value=s;render(true);suggest()}
+
+/* ---------- auth ---------- */
+function setMode(m){mode=m;$("go").textContent=m==="login"?"Sign in":"Register";$("sw").textContent=m==="login"?"Create an account":"I already have an account";$("sub").textContent=m==="login"?"Sign in to start messaging.":"Create your account.";$("err").textContent=""}
+$("sw").onclick=()=>setMode(mode==="login"?"reg":"login");
+async function auth(){
+const u=$("un").value.trim().toLowerCase(),p=$("pw").value,e=$("err");
+if(!/^[a-z0-9_]{3,16}$/.test(u)){e.textContent="Username: 3–16 letters, numbers or underscores.";return}
+if(p.length<6){e.textContent="Password must be at least 6 characters.";return}
+const d=load();
+if(mode==="reg"){
+if(d.users[u]){e.textContent="That username is taken.";return}
+const salt=crypto.randomUUID();d.users[u]={id:u,salt,h:await hash(p,salt),created:Date.now(),hide:false};save(d);
+}else{
+const x=d.users[u];if(!x||x.h!==await hash(p,x.salt)){e.textContent="Invalid username or password.";return}
+}
+me=u;try{sessionStorage.setItem("sc_me",me)}catch(e){}$("pw").value="";start();
+}
+$("go").onclick=auth;$("pw").onkeydown=e=>{if(e.key==="Enter")auth()};
+
+function start(){
+const d=load();if(!me||!d.users[me]){me=null;$("auth").classList.remove("hide");$("app").classList.add("hide");return}
+$("auth").classList.add("hide");$("app").classList.remove("hide");
+$("meName").textContent=me;$("meAv").textContent=me[0];$("hide").checked=!!d.users[me].hide;
+beat();render(true);
+}
+$("out").onclick=()=>{const p=pres();delete p[me];setPres(p);try{sessionStorage.removeItem("sc_me")}catch(e){}me=null;peer=null;outbox=[];replyTo=null;q="";$("mq").value="";ch.postMessage("s");start()};
+$("hide").onchange=e=>{const d=load();d.users[me].hide=e.target.checked;save(d);render()};
+$("off").onchange=e=>{net=!e.target.checked;$("net").classList.toggle("hide",net);if(net){beat();flush()}else{const p=pres();delete p[me];setPres(p);ch.postMessage("s")}render()};
+$("sq").oninput=()=>render();
+$("mq").oninput=e=>{q=e.target.value;shown=20;render(true);suggest();clearTimeout(st);st=setTimeout(recordSearch,1200)};
+$("mq").onkeydown=e=>{if(e.key==="Enter")recordSearch()};
+$("bk").onclick=()=>{peer=null;replyTo=null;$("app").classList.remove("open");render(true)};
+
+/* ---------- connections (permission to chat) ---------- */
+function request(id){
+const d=load(),c=conn(d,me,id);
+if(c&&c.status==="accepted")return;
+if(c&&c.status==="pending"&&c.from===id){c.status="accepted";c.ts=Date.now()}
+else if(c){
+if(c.status==="declined"&&c.from===me&&Date.now()-c.ts<6e4)return alert("Please wait a minute before asking again.");
+c.from=me;c.to=id;c.status="pending";c.ts=Date.now()}
+else d.conns.push({id:crypto.randomUUID(),from:me,to:id,status:"pending",ts:Date.now()});
+save(d);render(true)}
+function respond(id,ok){
+const d=load(),c=conn(d,me,id);
+if(!c||c.to!==me||c.status==="accepted")return;
+c.status=ok?"accepted":"declined";c.ts=Date.now();save(d);render(true);
+if(ok&&!$("mi").disabled)$("mi").focus()}
+function cancelReq(id){const d=load();d.conns=d.conns.filter(x=>!(x.from===me&&x.to===id&&x.status==="pending"));save(d);render(true)}
+function panel(cn,u){
+const n=esc(u);let t,b;
+if(!cn){t=`You are not connected with <b>${n}</b> yet. Send a connection request. You can chat once they accept.`;b=`<button class="pri" onclick="request('${u}')">Send connection request</button>`}
+else if(cn.status==="pending"&&cn.from===me){t=`Request sent. Waiting for <b>${n}</b> to accept.`;b=`<button onclick="cancelReq('${u}')">Cancel request</button>`}
+else if(cn.status==="pending"){t=`<b>${n}</b> wants to connect with you.`;b=`<button class="pri" onclick="respond('${u}',true)">Accept</button> <button onclick="respond('${u}',false)">Decline</button>`}
+else if(cn.to===me){t=`You declined <b>${n}</b>'s request.`;b=`<button class="pri" onclick="respond('${u}',true)">Accept now</button>`}
+else{t=`<b>${n}</b> declined your request.`;b=`<button onclick="request('${u}')">Send again</button>`}
+return`<div class="panel"><p style="margin:0 0 12px">${t}</p>${b}</div>`}
+
+/* ---------- conversation ---------- */
+function convo(d,a,b){const t=(d.cleared&&d.cleared[a+"|"+b])||0;return d.msgs.filter(m=>m.ts>t&&((m.from===a&&m.to===b)||(m.from===b&&m.to===a)))}
+function inbox(){
+if(!me||!net)return;const d=load();let c=false;
+d.msgs.forEach(m=>{if(m.to!==me)return;
+if(m.status==="sent"){m.status="delivered";c=true}
+if(peer===m.from&&!document.hidden&&m.status!=="read"){m.status="read";c=true}});
+if(c)save(d);
+}
+function openChat(id){
+const f=norm($("sq").value).trim().replace(/\s+/g," "),L=getL();
+L.o[id]=(L.o[id]||0)+1;
+if(f){L.s[f]=L.s[f]||{};L.s[f][id]=(L.s[f][id]||0)+1}
+setL(L);
+peer=id;shown=20;q="";replyTo=null;$("mq").value="";$("app").classList.add("open");
+render(true);suggest();if(!$("mi").disabled)$("mi").focus()}
+function showReply(d){
+const bar=$("rbar");
+if(!replyTo){bar.classList.add("hide");return}
+const m=d.msgs.find(x=>x.id===replyTo)||outbox.find(x=>x.id===replyTo);
+if(!m){replyTo=null;bar.classList.add("hide");return}
+bar.classList.remove("hide");
+$("rtxt").innerHTML=`Replying to <b>${esc(m.from===me?"yourself":m.from)}</b>: ${esc(m.deleted?"Message deleted":m.body.slice(0,80))}`}
+function reply(id){const d=load(),m=d.msgs.find(x=>x.id===id)||outbox.find(x=>x.id===id);if(!m||m.deleted)return;replyTo=id;showReply(d);$("mi").focus()}
+$("rx").onclick=()=>{replyTo=null;showReply(load())};
+function quote(d,m){
+if(!m.reply)return"";
+const o=d.msgs.find(x=>x.id===m.reply);
+const who=o?(o.from===me?"You":o.from):"",txt=!o?"Original message unavailable":o.deleted?"Message deleted":o.body.slice(0,80);
+return`<div class="q" onclick="jump('${m.reply}')"><b>${esc(who)}</b><span>${esc(txt)}</span></div>`}
+function jump(id){
+let el=$("m-"+id);
+if(!el){q="";$("mq").value="";shown=1000;render();el=$("m-"+id)}
+if(el){el.scrollIntoView({block:"center",behavior:"smooth"});el.classList.add("flash");setTimeout(()=>el&&el.classList.remove("flash"),1800)}}
+
+function render(jumpEnd){
+if(!me)return;inbox();const d=load();if(!d.users[me]){return}
+$("meSt").textContent=net?"online":"offline";
+const L=getL(),f=norm($("sq").value).trim().replace(/\s+/g," "),ft=f?f.split(" "):[];
+const rows=Object.keys(d.users).filter(u=>u!==me).map(u=>{
+const c=convo(d,me,u),last=c[c.length-1],cn=conn(d,me,u);
+const inReq=!!cn&&cn.status==="pending"&&cn.to===me,outReq=!!cn&&cn.status==="pending"&&cn.from===me;
+let sc=ft.length?scoreText(u,ft,f):1;
+if(ft.length&&sc>0){sc+=Math.min(2,(L.o[u]||0)*.25);let b=0;for(const k in L.s)if(k.startsWith(f)&&L.s[k][u])b+=L.s[k][u]*.5;sc+=Math.min(3,b)}
+return{u,last,inReq,outReq,sc,ts:last?last.ts:(cn?cn.ts:0),un:c.filter(m=>m.to===me&&m.status!=="read"&&!m.deleted).length}
+}).filter(r=>r.sc>0).sort((a,b)=>ft.length?(b.sc-a.sc||b.ts-a.ts):(b.ts-a.ts));
+$("list").innerHTML=rows.length?rows.map(r=>{const p=presence(r.u,d);
+const prev=r.inReq?"Wants to connect":r.outReq?"Request sent":r.last?(r.last.deleted?"Message deleted":esc(r.last.body)):p.t;
+return`<div class="u${peer===r.u?" sel":""}" tabindex="0" role="button" onclick="openChat('${r.u}')" onkeydown="if(event.key==='Enter')openChat('${r.u}')"><div class="av">${esc(r.u[0])}<span class="dot${p.on?" on":""}"></span></div><div class="t"><div class="n">${esc(r.u)}</div><div class="p">${prev}</div></div>${r.inReq?`<span class="badge">Request</span>`:r.un?`<span class="badge">${r.un}</span>`:""}</div>`}).join(""):`<div class="empty" style="padding:24px">${ft.length?"No users match your search.":"No other users yet. Register a second account in another tab."}</div>`;
+
+if(!peer||!d.users[peer]){
+$("mi").disabled=$("sd").disabled=$("mq").disabled=$("clr").disabled=true;
+$("chips").classList.add("hide");$("head").innerHTML=`<span class="sm">No conversation selected</span>`;
+$("msgs").innerHTML=`<div class="empty">Select a user to start a conversation.</div>`;
+showReply(d);return}
+
+const cn=conn(d,me,peer),ok=!!cn&&cn.status==="accepted";
+$("mq").disabled=false;$("clr").disabled=!ok;$("mi").disabled=$("sd").disabled=!ok;
+$("mi").placeholder=ok?"Type a message":"Connect to start chatting";
+const p=presence(peer,d);
+$("head").innerHTML=`<div style="font-weight:500">${esc(peer)}</div><div class="sm">${p.t}</div>`;
+showReply(d);
+const box=$("msgs"),chips=$("chips");
+if(!ok){chips.classList.add("hide");box.innerHTML=panel(cn,peer);return}
+
+const toks=[...new Set(norm(q).split(/\s+/).filter(Boolean))].slice(0,6),full=toks.join(" ");
+const all=convo(d,me,peer).concat(outbox.filter(m=>m.to===peer&&!d.msgs.some(x=>x.id===m.id)));
+let list,more;
+if(toks.length){
+const sc=all.filter(m=>!m.deleted).map(m=>({m,s:scoreText(m.body,toks,full)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||b.m.ts-a.m.ts);
+hits=sc.length;more=sc.length>shown;list=sc.slice(0,shown).map(x=>x.m);
+}else{hits=0;more=all.length>shown;list=all.slice(-shown)}
+
+if(toks.length){
+const alt=hits?"":fix(d,toks);
+chips.classList.remove("hide");
+chips.innerHTML=toks.map((t,i)=>`<span class="chip h${i%6}">${esc(t)}</span>`).join("")+`<span class="sm">${hits} result${hits===1?"":"s"}${hits?" · best match first":""}</span>`+(alt?` <button class="link" data-q="${esc(alt)}" onclick="useQ(this.dataset.q)">Did you mean “${esc(alt)}”?</button>`:"");
+}else chips.classList.add("hide");
+
+const near=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+const btn=more?`<button onclick="shown+=20;render()" style="align-self:center">${toks.length?"Show more results":"Load older messages"}</button>`:"";
+box.innerHTML=(!toks.length?btn:"")+
+(list.length?list.map(m=>{const mine=m.from===me;
+const tick=!mine?"":m.pending?"…":m.status==="read"?`<span class="rd">✓✓</span>`:m.status==="delivered"?"✓✓":"✓";
+const rep=!m.deleted&&!m.pending?`<button class="act" onclick="reply('${m.id}')">Reply</button>`:"";
+const acts=mine&&!m.deleted&&!m.pending?`<button class="act" onclick="edit('${m.id}')">Edit</button><button class="act" onclick="del('${m.id}')">Delete</button>`:"";
+return`<div class="b${mine?" me":""}${m.deleted?" del":""}" id="m-${m.id}">${m.deleted?"This message was deleted":quote(d,m)+hl(m.body,toks)}<div class="meta">${m.edited&&!m.deleted?"edited · ":""}${fmt(m.ts)} ${tick} ${rep}${acts}</div></div>`}).join(""):`<div class="empty">${toks.length?"No matching messages.":"No messages yet. Say hello!"}</div>`)+
+(toks.length?btn:"");
+if(toks.length){if(jumpEnd)box.scrollTop=0}else if(jumpEnd||near)box.scrollTop=box.scrollHeight;
+}
+function send(){
+const i=$("mi"),body=i.value.trim();if(!body||!peer)return;
+const cn=conn(load(),me,peer);if(!cn||cn.status!=="accepted")return;
+const now=Date.now();stamps=stamps.filter(t=>now-t<3000);if(stamps.length>=5){i.placeholder="Slow down: rate limit reached";return}stamps.push(now);i.placeholder="Type a message";
+const m={id:crypto.randomUUID(),from:me,to:peer,body:body.slice(0,1000),ts:now,status:"sent",edited:false,deleted:false};
+if(replyTo)m.reply=replyTo;
+i.value="";replyTo=null;
+if(!net){m.pending=true;outbox.push(m)}else commit(m);
+q="";$("mq").value="";
+render(true);
+}
+function commit(m){const d=load();if(d.msgs.some(x=>x.id===m.id))return;const c={...m};delete c.pending;d.msgs.push(c);save(d)}
+function flush(){const q2=outbox;outbox=[];q2.forEach(m=>commit({...m,ts:Date.now()}))}
+function edit(id){const d=load(),m=d.msgs.find(x=>x.id===id);if(!m||m.from!==me||Date.now()-m.ts>9e5)return alert("Messages can be edited for 15 minutes.");const v=prompt("Edit message",m.body);if(v&&v.trim()){m.body=v.trim().slice(0,1000);m.edited=true;save(d);render()}}
+function del(id){if(!confirm("Delete this message for everyone?"))return;const d=load(),m=d.msgs.find(x=>x.id===id);if(m&&m.from===me){m.deleted=true;m.body="";save(d);render()}}
+$("clr").onclick=()=>{
+if(!peer)return;
+if(!confirm("Clear this chat? Messages are removed from your view only. "+peer+" will still see them."))return;
+const d=load();d.cleared[me+"|"+peer]=Date.now();save(d);
+outbox=outbox.filter(m=>m.to!==peer);replyTo=null;q="";$("mq").value="";render(true)};
+$("sd").onclick=send;
+$("mi").onkeydown=e=>{if(e.key==="Enter")send();if(e.key==="Escape"){replyTo=null;showReply(load())}};
+ch.onmessage=()=>render();
+addEventListener("storage",e=>{if(e.key===DB)render()});
+document.addEventListener("visibilitychange",()=>render());
+addEventListener("beforeunload",()=>{if(me){const p=pres();p[me]=Date.now()-5000;setPres(p)}});
+setInterval(()=>{beat();render()},4000);
+start();
+</script>
+</body></html>
