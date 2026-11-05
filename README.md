@@ -1,6 +1,23 @@
 # 🚀 SecureChat Pro — Advanced Real-Time Messenger
 
+[![Run on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/Hariharan-000/ChartApplication)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Hariharan-000/ChartApplication)
+
 A high-performance, real-time messaging and collaboration web application with fluid glassmorphism UI, spring animations, WebRTC audio/video calling, procedural Web Audio synthesizer, and secure token-based authentication.
+
+---
+
+## 🌐 Instant Run Links
+
+You can run this project online directly from this GitHub repository using any of the following:
+
+1. **Instant Browser Run (No installation required):**
+   👉 [**Open and Run on StackBlitz**](https://stackblitz.com/github/Hariharan-000/ChartApplication)
+   *(Runs Node.js + Express + WebSockets directly inside your browser)*
+
+2. **Free 24/7 Cloud Deployment (Live Public Web URL):**
+   👉 [**Deploy on Render**](https://render.com/deploy?repo=https://github.com/Hariharan-000/ChartApplication)
+   *(Creates a free live HTTPS URL like `https://chartapplication.onrender.com`)*
 
 ---
 
@@ -26,21 +43,22 @@ A high-performance, real-time messaging and collaboration web application with f
 
 ---
 
-## 🚀 Getting Started
+## 💻 Run Locally
 
-### 1. Install Dependencies
 ```bash
+# 1. Clone repository
+git clone https://github.com/Hariharan-000/ChartApplication.git
+
+# 2. Enter folder
+cd ChartApplication
+
+# 3. Install dependencies
 npm install
-```
 
-### 2. Start the Server
-```bash
+# 4. Start the server
 npm start
 ```
 The server will start at `http://localhost:3000`.
-
-### 3. Open in Browser
-Open `http://localhost:3000` in your web browser. Open a second tab or incognito window, register another user, send a connection request, and chat in real time!
 
 ---
 
